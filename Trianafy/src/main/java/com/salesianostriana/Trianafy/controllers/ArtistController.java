@@ -1,6 +1,7 @@
 package com.salesianostriana.Trianafy.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,4 +16,15 @@ public class ArtistController {
 
 
     @GetMapping("/{id}")
-    public Artist findOne (@PathVariable("id") Long id ){ return repository.findById(id).orElse(null); }
+    public ResponseEntity<Artist> findOne (@PathVariable("id") Long id ){
+        return ResponseEntity
+                .of(repository.findById(id));
+    }
+
+
+
+
+
+
+
+}

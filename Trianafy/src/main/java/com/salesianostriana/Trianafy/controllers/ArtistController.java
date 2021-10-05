@@ -39,6 +39,7 @@ public class ArtistController {
         return ResponseEntity.of(
                 repository.findById(id).map( m -> {
                     m.setName(a.getName());
+                    repository.save(m);
                     return m;
                 })
         );

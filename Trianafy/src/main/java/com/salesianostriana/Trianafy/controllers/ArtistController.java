@@ -16,6 +16,7 @@ public class ArtistController {
     private final ArtistRepository repository;
 
 
+    
     @GetMapping("/{id}")
     public ResponseEntity<Artist> findOne (@PathVariable("id") Long id ){
         Artits data = repository.findAll();

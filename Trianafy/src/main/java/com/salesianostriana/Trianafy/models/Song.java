@@ -27,5 +27,11 @@ public class Song {
     @ManyToOne
     private Artist artist;
 
+    public Song(String title, String album, String year, Artist artist) {
+        this.title = title;
+        this.album = album;
+        this.year = year;
+        this.artist = artist;
+    }
 }
 

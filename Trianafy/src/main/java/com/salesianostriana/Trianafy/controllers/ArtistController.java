@@ -32,7 +32,7 @@ public class ArtistController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/artist/{id}")
     public ResponseEntity <Artist> edit (
             @RequestBody Artist a,
             @PathVariable Long id) {

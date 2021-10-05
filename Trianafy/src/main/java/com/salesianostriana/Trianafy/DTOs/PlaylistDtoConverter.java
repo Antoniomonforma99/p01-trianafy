@@ -1,0 +1,25 @@
+package com.salesianostriana.Trianafy.DTOs;
+
+import com.salesianostriana.Trianafy.models.Playlist;
+import org.springframework.stereotype.Component;
+
+@Component
+public class PlaylistDtoConverter {
+
+    public Playlist createPlaylistDtoToPlaylist(CreatePlaylistDto c) {
+        return new Playlist(
+                c.getName(),
+                c.getDescription()
+        );
+    }
+
+    public GetPlaylistDto playlistToGetPlaylistDto(Playlist p) {
+
+        GetPlaylistDto result = new GetPlaylistDto();
+        result.setName(p.getName());
+        result.setDescription(p.getDescription());
+        result.setSongs(p.getSongs());
+        return result;
+    }
+
+}

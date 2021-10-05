@@ -19,7 +19,7 @@ public class ArtistController {
 
 
     
-    @GetMapping("/{id}")
+    @GetMapping("/artist/{id}")
     public ResponseEntity<List<Artist>> findOne (@PathVariable("id") Long id ){
 
         if (repository.findById(id) == null) {

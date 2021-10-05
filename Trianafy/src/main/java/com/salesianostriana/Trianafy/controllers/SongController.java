@@ -52,7 +52,7 @@ public class SongController {
         );
     }
 
-    @PostMapping("/")
+    @PostMapping("/songs")
     public ResponseEntity<Song> create (@RequestBody CreateSongDto dto){
 
         if (dto.getArtist() == null){

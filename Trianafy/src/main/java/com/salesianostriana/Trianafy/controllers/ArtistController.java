@@ -19,11 +19,11 @@ public class ArtistController {
     
     @GetMapping("/{id}")
     public ResponseEntity<Artist> findOne (@PathVariable("id") Long id ){
-        Artits data = repository.findAll();
+        Artist data = repository.findById(id);
         if (data.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(repository.findById(id));
+                    .build();
         }else{
             return ResponseEntity
                     .status(HttpStatus.ACCEPTED)

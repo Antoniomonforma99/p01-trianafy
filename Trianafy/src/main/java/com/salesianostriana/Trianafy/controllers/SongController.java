@@ -1,11 +1,15 @@
 package com.salesianostriana.Trianafy.controllers;
 
+import com.salesianostriana.Trianafy.DTOs.CreateSongDto;
 import com.salesianostriana.Trianafy.DTOs.GetSongDto;
 import com.salesianostriana.Trianafy.DTOs.SongDtoConverter;
+import com.salesianostriana.Trianafy.models.Artist;
 import com.salesianostriana.Trianafy.models.Song;
+import com.salesianostriana.Trianafy.repositories.ArtistRepository;
 import com.salesianostriana.Trianafy.repositories.SongRepository;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.apache.bcel.Repository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +23,7 @@ public class SongController {
 
     private final SongRepository repository;
     private final SongDtoConverter dtoConverter;
+    private final ArtistRepository artistRepository;
 
     @GetMapping("/")
     public ResponseEntity<List<GetSongDto>> findAll() {
@@ -45,6 +50,19 @@ public class SongController {
                     return s;
                 })
         );
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<Song> create (@RequestBody CreateSongDto dto){
+
+        if (dto.getArtist() == null){
+            return ResponseEntity.badRequest().build();
+        }
+        Song nueva = dtoConverter.createSongDtoToSong(dto);
+        Artist artist = artistRepository.findById(dto.getArtist().getId()).orElse(null);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(repository.save(nueva));
     }
 
 

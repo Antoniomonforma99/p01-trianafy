@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/artist")
@@ -18,9 +20,9 @@ public class ArtistController {
 
     
     @GetMapping("/{id}")
-    public ResponseEntity<Artist> findOne (@PathVariable("id") Long id ){
-        Artist data = repository.findById(id);
-        if (data.isEmpty()) {
+    public ResponseEntity<List<Artist>> findOne (@PathVariable("id") Long id ){
+
+        if (repository.findById(id) == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .build();
@@ -29,7 +31,6 @@ public class ArtistController {
                     .status(HttpStatus.ACCEPTED)
                     .body(repository.findById(id));
         }
-
     }
 
 

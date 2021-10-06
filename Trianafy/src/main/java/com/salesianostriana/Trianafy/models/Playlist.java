@@ -2,10 +2,7 @@ package com.salesianostriana.Trianafy.models;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -24,11 +21,17 @@ public class Playlist {
     @Lob
     private String description;
 
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Song> songs;
 
     public Playlist(String name, String description, List<Song> songs) {
         this.name = name;
         this.description = description;
         this.songs = songs;
+    }
+
+    public Playlist(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 }

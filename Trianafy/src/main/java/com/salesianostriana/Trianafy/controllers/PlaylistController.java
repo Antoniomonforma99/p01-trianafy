@@ -1,8 +1,10 @@
 package com.salesianostriana.Trianafy.controllers;
 
+import com.salesianostriana.Trianafy.DTOs.CreatePlaylistDto;
 import com.salesianostriana.Trianafy.models.Playlist;
 import com.salesianostriana.Trianafy.repositories.PlaylistRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +33,17 @@ public class PlaylistController {
     private final PlaylistRepository repository;
     private final SongRepository SongRepository;
 
+    @PostMapping("/")
+    public ResponseEntity<Playlist> create(@RequestBody CreatePlaylistDto dto) {
+
+        Playlist nuevo = PlaylistDtoConverter.createPlaylistDtoToPlaylist(dto);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(repository.save(nuevo));
+
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Playlist> edit (@RequestBody Playlist pl,@PathVariable("id") Long id){
@@ -43,30 +56,22 @@ public class PlaylistController {
             );
     }
 
-    @PostMapping("/{id1}/songs/{id2}")
+    @PostMapping("/{idPlaylist}/songs/{idSong}")
     public ResponseEntity<Playlist> addSong (@RequestBody Playlist p,
-                                             @PathVariable("id") Long id1,
-                                             @PathVariable("id") Long id2){
+                                             @PathVariable Long idPlaylist,
+                                             @PathVariable Long idSong){
 
-        if ( (repository.findById(id1) == null)
-                || ( SongRepository.findById(id2) == null)){
 
-            return ResponseEntity.badRequest().build();
-
-        }else{
-
-            Song song = SongRepository.getById(id2);
-            p.getSongs().add(song);
+            Song song = SongRepository.getById(idSong);
 
             return ResponseEntity.of(
-                    repository.findById(id1).map(m -> {
-                        m.setName(p.getName());
-                        m.setDescription(p.getDescription());
-                        m.setSongs(p.getSongs());
-                        repository.save(m);
-                        return m;
+                    repository.findById(idPlaylist).map(l -> {
+                        l.getSongs().add(song);
+                        return l;
                     })
             );
-        }
+
     }
+
+
 }

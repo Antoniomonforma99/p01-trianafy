@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,6 +41,17 @@ public class SongController {
     }
 
     @GetMapping("/{id}")
+    public ResponseEntity<Song> findOne (@PathVariable Long id) {
+        if (repository.findById(id) == null) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        } else {
+            return ResponseEntity.of(repository.findById(id));
+        }
+    }
+
+/*    @GetMapping("/{id}")
     public ResponseEntity<Song> findOne(@PathVariable Long id) {
 
         if (repository.findById(id) == null) {
@@ -48,11 +60,11 @@ public class SongController {
                     .build();
         } else {
 
-            GetSongDto result = new CreateSongDto(repository.findById(id));
+            GetSongDto result = new CreateSongDto(repository.getById(id));
 
             return result;
 
         }
 
-    }
+    }*/
 }

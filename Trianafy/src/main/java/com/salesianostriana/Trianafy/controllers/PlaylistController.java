@@ -1,5 +1,9 @@
 package com.salesianostriana.Trianafy.controllers;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.salesianostriana.Trianafy.DTOs.CreateSongDto;
 import com.salesianostriana.Trianafy.DTOs.PlaylistDtoConverter;
 import com.salesianostriana.Trianafy.DTOs.SongDtoConverter;
@@ -16,21 +20,13 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+
 @RequestMapping("/list")
 public class PlaylistController {
 
     private final PlaylistRepository repository;
     private final SongRepository SongRepository;
 
-
-    @GetMapping("/{id}")
-    private ResponseEntity<Playlist> findOne(@PathVariable Long id) {
-
-        return Optional
-                .ofNullable(repository.findById(id))
-                .map( Playlist -> ResponseEntity.ok().body(Playlist))
-                .orElseGet( () -> ResponseEntity.notFound().build());
-    }
 
 
     @PostMapping("/{id1}/songs/{id2}")
@@ -59,8 +55,4 @@ public class PlaylistController {
             );
         }
     }
-
-
-
-    
 }

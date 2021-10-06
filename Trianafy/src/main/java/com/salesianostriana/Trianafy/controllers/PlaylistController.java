@@ -39,7 +39,7 @@ public class PlaylistController {
                                              @PathVariable("id") Long id2){
 
         if ( (repository.findById(id1) == null)
-                &&( SongRepository.findById(id2) == null)){
+                || ( SongRepository.findById(id2) == null)){
 
             return ResponseEntity.badRequest().build();
 

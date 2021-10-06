@@ -18,7 +18,6 @@ public class PlaylistDtoConverter {
         GetPlaylistDto result = new GetPlaylistDto();
         result.setName(p.getName());
         result.setDescription(p.getDescription());
-        result.setSongs(p.getSongs());
         return result;
     }
 

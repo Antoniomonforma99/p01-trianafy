@@ -65,6 +65,14 @@ public class SongController {
                 .body(repository.save(nueva));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Song> delete (@RequestBody Long id) {
+        repository.deleteById(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
 
 
 

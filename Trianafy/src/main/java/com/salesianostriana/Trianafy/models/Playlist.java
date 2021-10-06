@@ -20,7 +20,6 @@ public class Playlist {
 
     @Lob
     private String description;
-
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Song> songs;
 

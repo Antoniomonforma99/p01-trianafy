@@ -1,6 +1,7 @@
 package com.salesianostriana.Trianafy.models;
 
 import lombok.*;
+import org.hibernate.engine.profile.Fetch;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,7 +21,9 @@ public class Playlist {
 
     @Lob
     private String description;
-    @ManyToMany(fetch = FetchType.EAGER)
+
+    @ManyToMany(fetch= FetchType.EAGER)
+    @ElementCollection
     private List<Song> songs;
 
     public Playlist(String name, String description, List<Song> songs) {

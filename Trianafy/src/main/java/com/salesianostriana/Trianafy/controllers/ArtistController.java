@@ -16,23 +16,29 @@ public class ArtistController {
 
     private final ArtistRepository repository;
 
+    @PostMapping("/")
+    public ResponseEntity<Artist> create(@RequestBody Artist newArtist){
 
-    
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(repository.save(newArtist));
+
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<List<Artist>> findOne (@PathVariable("id") Long id ){
+    public ResponseEntity<Artist> findOne (@PathVariable("id") Long id ){
 
         if (repository.findById(id) == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .build();
         }else{
-            return ResponseEntity
-                    .status(HttpStatus.ACCEPTED)
-                    .body(repository.findById(id));
+            return ResponseEntity.of(repository.findById(id));
+
         }
     }
 
-    @PutMapping("/artist/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity <Artist> edit (
             @RequestBody Artist a,
             @PathVariable Long id) {
@@ -57,7 +63,14 @@ public class ArtistController {
         }
     }
 
-
-
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Artist> delete (@PathVariable("id") Long id){
+        if (repository.findById(id) == null){
+            return ResponseEntity.notFound().build();
+        }
+        else {
+            repository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+    }
 }

@@ -46,8 +46,16 @@ public class ArtistController {
 
     }
 
-
-
+    @GetMapping("/")
+    public ResponseEntity<List<Artist>> findAll(){
+        List<Artist> todos = repository.findAll();
+        if (todos.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        else {
+            return ResponseEntity.ok().body(todos);
+        }
+    }
 
 
 

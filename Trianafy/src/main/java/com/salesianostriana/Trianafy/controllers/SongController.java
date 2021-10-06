@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,6 +41,32 @@ public class SongController {
                     .body(todas);
         }
     }
+
+  
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Song> findOne (@PathVariable Long id) {
+        if (repository.findById(id) == null) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        } else {
+            return ResponseEntity.of(repository.findById(id));
+        }
+    }
+    }
+    @PostMapping("/")
+        public ResponseEntity<Song> create (@RequestBody CreateSongDto dto){
+
+            if (dto.getArtist() == null){
+                return ResponseEntity.badRequest().build();
+            }
+            Song nueva = dtoConverter.createSongDtoToSong(dto);
+            Artist artist = artistRepository.findById(dto.getArtist().getId()).orElse(null);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(repository.save(nueva));
+        }
     @PutMapping("/{id}")
     public ResponseEntity<Song> edit (@RequestBody Song so, @PathVariable Long id){
         return ResponseEntity.of(repository.findById(id).map(s -> {
@@ -52,19 +79,6 @@ public class SongController {
         );
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Song> create (@RequestBody CreateSongDto dto){
-
-        if (dto.getArtist() == null){
-            return ResponseEntity.badRequest().build();
-        }
-        Song nueva = dtoConverter.createSongDtoToSong(dto);
-        Artist artist = artistRepository.findById(dto.getArtist().getId()).orElse(null);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(repository.save(nueva));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Song> delete (@RequestBody Long id) {
         repository.deleteById(id);
@@ -73,7 +87,4 @@ public class SongController {
                 .noContent()
                 .build();
     }
-
-
-
 }

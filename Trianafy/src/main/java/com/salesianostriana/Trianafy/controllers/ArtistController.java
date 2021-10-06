@@ -16,6 +16,14 @@ public class ArtistController {
 
     private final ArtistRepository repository;
 
+    @PostMapping("/")
+    public ResponseEntity<Artist> create(@RequestBody Artist newArtist){
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(repository.save(newArtist));
+
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Artist> findOne (@PathVariable("id") Long id ){
@@ -30,7 +38,7 @@ public class ArtistController {
         }
     }
 
-    @PutMapping("/artist/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity <Artist> edit (
             @RequestBody Artist a,
             @PathVariable Long id) {
@@ -56,7 +64,7 @@ public class ArtistController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Artist> delete (@PathVariable Long id){
+    public ResponseEntity<Artist> delete (@PathVariable("id") Long id){
         if (repository.findById(id) == null){
             return ResponseEntity.notFound().build();
         }

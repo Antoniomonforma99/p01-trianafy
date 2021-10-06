@@ -32,8 +32,7 @@ public class SongController {
         if (canciones.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            List<GetSongDto> todas = canciones
-                    .stream()
+            List<GetSongDto> todas = canciones.stream()
                     .map(dtoConverter::songToGetSongDto)
                     .collect(Collectors.toList());
             return ResponseEntity
@@ -45,7 +44,7 @@ public class SongController {
   
 
     @GetMapping("/{id}")
-    public ResponseEntity<Song> findOne (@PathVariable Long id) {
+    public ResponseEntity<Song> findOne (@PathVariable("id") Long id) {
         if (repository.findById(id) == null) {
             return ResponseEntity
                     .notFound()
@@ -54,21 +53,22 @@ public class SongController {
             return ResponseEntity.of(repository.findById(id));
         }
     }
-    }
     @PostMapping("/")
         public ResponseEntity<Song> create (@RequestBody CreateSongDto dto){
 
-            if (dto.getArtist() == null){
+            if (dto.getArtistId() == null){
                 return ResponseEntity.badRequest().build();
             }
             Song nueva = dtoConverter.createSongDtoToSong(dto);
-            Artist artist = artistRepository.findById(dto.getArtist().getId()).orElse(null);
+            Artist artist = artistRepository.findById(dto.getArtistId()).orElse(null);
+            nueva.setArtist(artist);
+
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(repository.save(nueva));
         }
     @PutMapping("/{id}")
-    public ResponseEntity<Song> edit (@RequestBody Song so, @PathVariable Long id){
+    public ResponseEntity<Song> edit (@RequestBody Song so, @PathVariable("id") Long id){
         return ResponseEntity.of(repository.findById(id).map(s -> {
                     s.setTitle(so.getTitle());
                     s.setAlbum(so.getAlbum());
@@ -80,7 +80,7 @@ public class SongController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Song> delete (@RequestBody Long id) {
+    public ResponseEntity<Song> delete (@PathVariable("id") Long id) {
         repository.deleteById(id);
 
         return ResponseEntity

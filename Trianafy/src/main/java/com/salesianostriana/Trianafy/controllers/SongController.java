@@ -78,4 +78,13 @@ public class SongController {
                 })
         );
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Song> delete (@RequestBody Long id) {
+        repository.deleteById(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
 }

@@ -17,11 +17,11 @@ public class ArtistController {
     private final ArtistRepository repository;
 
     @PostMapping("/")
-    public ResponseEntity<Artist> create(@RequestBody Artist newArtist){
+    public ResponseEntity<Artist> create(@RequestBody Artist a){
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(repository.save(newArtist));
+                .body(repository.save(a));
 
     }
 

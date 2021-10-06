@@ -1,5 +1,6 @@
 package com.salesianostriana.Trianafy.controllers;
 
+import com.salesianostriana.Trianafy.DTOs.GetPlaylistDto;
 import com.salesianostriana.Trianafy.models.Playlist;
 import com.salesianostriana.Trianafy.repositories.PlaylistRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class PlaylistController {
 
     private final PlaylistRepository repository;
     private final SongRepository SongRepository;
+    private final PlaylistDtoConverter dtoConverter;
 
 
     @PutMapping("/{id}")
@@ -41,6 +44,20 @@ public class PlaylistController {
                     return p;
                 })
             );
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<GetPlaylistDto>> findAll() {
+        List<Playlist> playlists = repository.findAll();
+        if (playlists.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        else {
+            List<GetPlaylistDto> todas = playlists.stream()
+                    .map(dtoConverter::playlistToGetPlaylistDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok().body(todas);
+        }
     }
 
     @PostMapping("/{id1}/songs/{id2}")

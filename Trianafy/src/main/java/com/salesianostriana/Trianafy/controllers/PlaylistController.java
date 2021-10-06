@@ -32,6 +32,16 @@ public class PlaylistController {
     private final SongRepository SongRepository;
 
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Playlist> edit (@RequestBody Playlist pl,@PathVariable("id") Long id){
+        return ResponseEntity.of(repository.findById(id).map(p -> {
+                    p.setName(pl.getName());
+                    p.setDescription(pl.getDescription());
+                    repository.save(p);
+                    return p;
+                })
+            );
+    }
 
     @PostMapping("/{id1}/songs/{id2}")
     public ResponseEntity<Playlist> addSong (@RequestBody Playlist p,

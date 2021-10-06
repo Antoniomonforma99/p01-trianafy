@@ -1,6 +1,7 @@
 package com.salesianostriana.Trianafy.controllers;
 
 import com.salesianostriana.Trianafy.models.Playlist;
+import com.salesianostriana.Trianafy.repositories.PlaylistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

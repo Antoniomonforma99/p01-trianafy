@@ -34,7 +34,8 @@ public class SongController {
                     .ok()
                     .body(todas);
         }
-    }@PutMapping("/{id}")
+    }
+    @PutMapping("/{id}")
     public ResponseEntity<Song> edit (@RequestBody Song so, @PathVariable Long id){
         return ResponseEntity.of(repository.findById(id).map(s -> {
                     s.setTitle(so.getTitle());
@@ -45,5 +46,7 @@ public class SongController {
                 })
         );
     }
+
+
 
 }

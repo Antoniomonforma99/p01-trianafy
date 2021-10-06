@@ -3,14 +3,15 @@ package com.salesianostriana.Trianafy.controllers;
 import com.salesianostriana.Trianafy.DTOs.CreateSongDto;
 import com.salesianostriana.Trianafy.DTOs.GetSongDto;
 import com.salesianostriana.Trianafy.DTOs.SongDtoConverter;
+import com.salesianostriana.Trianafy.models.Artist;
 import com.salesianostriana.Trianafy.models.Song;
+import com.salesianostriana.Trianafy.repositories.ArtistRepository;
 import com.salesianostriana.Trianafy.repositories.SongRepository;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.apache.bcel.Repository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,22 +24,25 @@ public class SongController {
 
     private final SongRepository repository;
     private final SongDtoConverter dtoConverter;
+    private final ArtistRepository artistRepository;
 
     @GetMapping("/")
-    public ResponseEntity<List<GetSongDto>> findAll(){
+    public ResponseEntity<List<GetSongDto>> findAll() {
         List<Song> canciones = repository.findAll();
-        if (canciones.isEmpty()){
+        if (canciones.isEmpty()) {
             return ResponseEntity.notFound().build();
-        }
-        else {
+        } else {
             List<GetSongDto> todas = canciones
-                    .stream().map(dtoConverter::songToGetSongDto)
+                    .stream()
+                    .map(dtoConverter::songToGetSongDto)
                     .collect(Collectors.toList());
             return ResponseEntity
                     .ok()
                     .body(todas);
         }
     }
+
+  
 
     @GetMapping("/{id}")
     public ResponseEntity<Song> findOne (@PathVariable Long id) {
@@ -50,21 +54,28 @@ public class SongController {
             return ResponseEntity.of(repository.findById(id));
         }
     }
+    }
+    @PostMapping("/")
+        public ResponseEntity<Song> create (@RequestBody CreateSongDto dto){
 
-/*    @GetMapping("/{id}")
-    public ResponseEntity<Song> findOne(@PathVariable Long id) {
-
-        if (repository.findById(id) == null) {
+            if (dto.getArtist() == null){
+                return ResponseEntity.badRequest().build();
+            }
+            Song nueva = dtoConverter.createSongDtoToSong(dto);
+            Artist artist = artistRepository.findById(dto.getArtist().getId()).orElse(null);
             return ResponseEntity
-                    .notFound()
-                    .build();
-        } else {
-
-            GetSongDto result = new CreateSongDto(repository.getById(id));
-
-            return result;
-
+                    .status(HttpStatus.CREATED)
+                    .body(repository.save(nueva));
         }
-
-    }*/
+    @PutMapping("/{id}")
+    public ResponseEntity<Song> edit (@RequestBody Song so, @PathVariable Long id){
+        return ResponseEntity.of(repository.findById(id).map(s -> {
+                    s.setTitle(so.getTitle());
+                    s.setAlbum(so.getAlbum());
+                    s.setYear(so.getYear());
+                    repository.save(s);
+                    return s;
+                })
+        );
+    }
 }

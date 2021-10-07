@@ -73,30 +73,19 @@ public class PlaylistController {
     public ResponseEntity<Playlist> addSong (@RequestBody Playlist p,
                                              @PathVariable Long id1,
                                              @PathVariable Long id2){
-        List<Song> cOld = repository.getById(id1).getSongs();
-        Optional<Playlist> pl =repository.findById(id1);
-        Optional<Song> s =SongRepository.findById(id2);
-
-        if  (pl.isEmpty()
-                ||s.isEmpty()){
-
+        List<Song> lista = repository.getById(id1).getSongs();
+        if (repository.findById(id1).isEmpty() ||
+                !repository.findById(id1).get().getSongs().contains(SongRepository.getById(id2))) {
             return ResponseEntity.notFound().build();
-
-        }else{
-            cOld.add(SongRepository.getById(id2));
-            //Song song = SongRepository.getById(id2);
-            //p.getSongs().add(song);
-            return ResponseEntity.of(
-                    repository.findById(id1).map(m -> {
-                        m.setName(m.getName());
-                        m.setDescription(m.getDescription());
-                        m.setSongs(cOld);
-                        repository.save(m);
-                        return m;
-                    })
-            );
+        } else {
+            repository
+                    .findById(id1)
+                    .get()
+                    .getSongs().add(SongRepository.getById(id2));
+            return ResponseEntity.noContent().build();
         }
-    }
+        }
+    
   
     @DeleteMapping("{id1}/songs/{id2}")
     public ResponseEntity<Playlist>deleteSong(@PathVariable Long id1, @PathVariable Long id2) {

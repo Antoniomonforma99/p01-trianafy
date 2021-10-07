@@ -66,6 +66,13 @@ public class ArtistController {
                 .build();
     }
 
+    @PostMapping("/")
+    public ResponseEntity<Artist> create (@RequestBody Artist a) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(repository.save(a));
+    }
+
 
 
 

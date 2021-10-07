@@ -15,8 +15,7 @@ public class SongDtoConverter {
         return new Song(
                 c.getTitle(),
                 c.getAlbum(),
-                c.getYear(),
-                c.getArtist()
+                c.getYear()
         );
     }
 

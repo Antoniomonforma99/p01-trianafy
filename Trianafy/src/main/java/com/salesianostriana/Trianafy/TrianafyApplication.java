@@ -10,8 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(info = @Info(description = "Proyecto 01 de AD y PSP Trianafy," +
 		" Alejandro Martín, Guillermo De la cruz, Antonio Montero",
 		version = "1.0",
+
 		title = "Trianafy"
-)
+  )
 )
 public class TrianafyApplication {
 

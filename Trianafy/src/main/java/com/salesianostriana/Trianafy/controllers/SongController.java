@@ -32,7 +32,14 @@ public class SongController {
     private final SongRepository repository;
     private final SongDtoConverter dtoConverter;
     private final ArtistRepository artistRepository;
-    
+
+    @Operation(summary = "Mostrar todas las canciones de la base de datos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Devuelve todas las canciones",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Song.class)) }),
+            @ApiResponse(responseCode = "404", description = "Canciones no encontradas",
+                    content = @Content) })
     @GetMapping("/")
     public ResponseEntity<List<GetSongDto>> findAll() {
         List<Song> canciones = repository.findAll();
@@ -47,6 +54,17 @@ public class SongController {
                     .body(todas);
         }
     }
+
+
+    @Operation(summary = "Mostrar una canción por la id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Se muestra la canción",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Song.class))}),
+            @ApiResponse(responseCode = "404", description = "Si no se encuentra manda un notFound",
+                    content = @Content)
+    })
+
     @GetMapping("/{id}")
     public ResponseEntity<Song> findOne (@PathVariable("id") Long id) {
         if (repository.findById(id).isEmpty()) {
@@ -57,6 +75,14 @@ public class SongController {
             return ResponseEntity.of(repository.findById(id));
         }
     }
+    @Operation(summary = "Crear una cancion")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Se crea la canción",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Song.class))}),
+            @ApiResponse(responseCode = "400", description = "Si se introduce mal un dato manda BadRequest",
+                    content = @Content)
+    })
     @PostMapping("/")
         public ResponseEntity<Song> create (@RequestBody CreateSongDto dto){
 
@@ -71,6 +97,17 @@ public class SongController {
                     .status(HttpStatus.CREATED)
                     .body(repository.save(nueva));
         }
+    @Operation(summary = "Editar un canción")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Edita la canción",
+            content = {@Content(mediaType = "application/json",
+            schema = @Schema(implementation = Song.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Algún dato se envia mal",
+            content = @Content),
+            @ApiResponse(responseCode = "404", description = "No se encontra la id de la canción",
+            content = @Content)
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Song> edit (@RequestBody Song so, @PathVariable("id") Long id){
         return ResponseEntity.of(repository.findById(id).map(s -> {
@@ -83,6 +120,13 @@ public class SongController {
         );
     }
 
+    @Operation(summary = "Eliminar una canción")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Se elimina la canción",
+            content = @Content),
+            @ApiResponse(responseCode = "404", description = "No se encuentra la id de la canción",
+            content = @Content)
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Song> delete (@PathVariable("id") Long id) {
         if (repository.findById(id).isEmpty()){

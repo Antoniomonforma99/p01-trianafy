@@ -86,4 +86,16 @@ public class PlaylistController {
             );
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Playlist> findOne (@PathVariable Long id) {
+        if (!repository.findById(id).isPresent()) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        } else {
+            return ResponseEntity
+                    .of(repository.findById(id));
+        }
+    }
 }

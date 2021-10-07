@@ -107,20 +107,15 @@ public class PlaylistController {
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Playlist> delete (@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Playlist> findOne (@PathVariable Long id) {
         if (!repository.findById(id).isPresent()) {
             return ResponseEntity
                     .notFound()
                     .build();
         } else {
-            repository.deleteById(id);
-
             return ResponseEntity
-                    .noContent()
-                    .build();
+                    .of(repository.findById(id));
         }
-
-
     }
 }

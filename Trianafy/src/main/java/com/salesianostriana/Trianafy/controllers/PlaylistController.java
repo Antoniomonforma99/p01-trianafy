@@ -80,7 +80,7 @@ public class PlaylistController {
     }
 
     @DeleteMapping("{id1}/songs/{id2}")
-    public ResponseEntity<Playlist>delete(@PathVariable Long id1, @PathVariable Long id2) {
+    public ResponseEntity<Playlist>deleteSong(@PathVariable Long id1, @PathVariable Long id2) {
         List<Song> lista = repository.getById(id1).getSongs();
         if (repository.findById(id1).isEmpty() ||
                 !repository.findById(id1).get().getSongs().contains(SongRepository.getById(id2))) {

@@ -4,6 +4,7 @@ import com.salesianostriana.Trianafy.DTOs.CreateSongDto;
 import com.salesianostriana.Trianafy.DTOs.GetSongDto;
 import com.salesianostriana.Trianafy.DTOs.SongDtoConverter;
 import com.salesianostriana.Trianafy.models.Artist;
+import com.salesianostriana.Trianafy.models.Playlist;
 import com.salesianostriana.Trianafy.models.Song;
 import com.salesianostriana.Trianafy.repositories.ArtistRepository;
 import com.salesianostriana.Trianafy.repositories.SongRepository;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.aspectj.apache.bcel.Repository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,9 +64,10 @@ public class SongController {
             @ApiResponse(responseCode = "404", description = "Si no se encuentra manda un notFound",
                     content = @Content)
     })
+
     @GetMapping("/{id}")
     public ResponseEntity<Song> findOne (@PathVariable("id") Long id) {
-        if (repository.findById(id) == null) {
+        if (repository.findById(id).isEmpty()) {
             return ResponseEntity
                     .notFound()
                     .build();
@@ -126,7 +129,7 @@ public class SongController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Song> delete (@PathVariable("id") Long id) {
-        if (repository.findById(id) == null){
+        if (repository.findById(id).isEmpty()){
         return ResponseEntity.notFound().build();
         }  
       else{

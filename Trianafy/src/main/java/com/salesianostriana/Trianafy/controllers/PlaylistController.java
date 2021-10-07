@@ -93,7 +93,6 @@ public class PlaylistController {
             cOld.add(SongRepository.getById(id2));
             //Song song = SongRepository.getById(id2);
             //p.getSongs().add(song);
-
             return ResponseEntity.of(
                     repository.findById(id1).map(m -> {
                         m.setName(m.getName());
@@ -109,7 +108,7 @@ public class PlaylistController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Playlist> findOne (@PathVariable Long id) {
-        if (!repository.findById(id).isPresent()) {
+        if (repository.findById(id).isEmpty()) {
             return ResponseEntity
                     .notFound()
                     .build();
@@ -120,7 +119,7 @@ public class PlaylistController {
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Playlist> delete (@PathVariable Long id) {
-        if (!repository.findById(id).isPresent()) {
+        if (repository.findById(id).isEmpty()) {
             return ResponseEntity
                     .notFound()
                     .build();

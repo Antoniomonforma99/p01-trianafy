@@ -8,19 +8,12 @@ import com.salesianostriana.Trianafy.repositories.PlaylistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.salesianostriana.Trianafy.DTOs.CreateSongDto;
 import com.salesianostriana.Trianafy.DTOs.PlaylistDtoConverter;
-import com.salesianostriana.Trianafy.DTOs.SongDtoConverter;
-import com.salesianostriana.Trianafy.models.Playlist;
 import com.salesianostriana.Trianafy.models.Song;
-import com.salesianostriana.Trianafy.repositories.PlaylistRepository;
 import com.salesianostriana.Trianafy.repositories.SongRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -104,7 +97,22 @@ public class PlaylistController {
             );
         }
     }
-
+  
+    @DeleteMapping("{id1}/songs/{id2}")
+    public ResponseEntity<Playlist>deleteSong(@PathVariable Long id1, @PathVariable Long id2) {
+        List<Song> lista = repository.getById(id1).getSongs();
+        if (repository.findById(id1).isEmpty() ||
+                !repository.findById(id1).get().getSongs().contains(SongRepository.getById(id2))) {
+            return ResponseEntity.notFound().build();
+        } else {
+            repository
+                    .findById(id1)
+                    .get()
+                    .getSongs().remove(SongRepository.getById(id2));
+            return ResponseEntity.noContent().build();
+        }
+    }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<Playlist> findOne (@PathVariable Long id) {
@@ -117,6 +125,7 @@ public class PlaylistController {
                     .of(repository.findById(id));
         }
     }
+  
     @DeleteMapping("/{id}")
     public ResponseEntity<Playlist> delete (@PathVariable Long id) {
         if (repository.findById(id).isEmpty()) {

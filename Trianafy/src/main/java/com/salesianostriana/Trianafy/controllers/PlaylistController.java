@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,21 +57,34 @@ public class PlaylistController {
             );
     }
 
-    @PostMapping("/{idPlaylist}/songs/{idSong}")
+    @PostMapping("/{id1}/songs/{id2}")
     public ResponseEntity<Playlist> addSong (@RequestBody Playlist p,
-                                             @PathVariable Long idPlaylist,
-                                             @PathVariable Long idSong){
+                                             @PathVariable Long id1,
+                                             @PathVariable Long id2){
+        List<Song> cOld = repository.getById(id1).getSongs();
+        Optional<Playlist> pl =repository.findById(id1);
+        Optional<Song> s =SongRepository.findById(id2);
 
+        if  (pl.isEmpty()
+                ||s.isEmpty()){
 
-            Song song = SongRepository.getById(idSong);
+            return ResponseEntity.notFound().build();
+
+        }else{
+            cOld.add(SongRepository.getById(id2));
+            //Song song = SongRepository.getById(id2);
+            //p.getSongs().add(song);
 
             return ResponseEntity.of(
-                    repository.findById(idPlaylist).map(l -> {
-                        l.getSongs().add(song);
-                        return l;
+                    repository.findById(id1).map(m -> {
+                        m.setName(m.getName());
+                        m.setDescription(m.getDescription());
+                        m.setSongs(cOld);
+                        repository.save(m);
+                        return m;
                     })
             );
-
+        }
     }
 
 

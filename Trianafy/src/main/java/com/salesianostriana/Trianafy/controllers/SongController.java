@@ -81,10 +81,16 @@ public class SongController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Song> delete (@PathVariable("id") Long id) {
-        repository.deleteById(id);
+        if (repository.findById(id) == null){
+        return ResponseEntity.notFound().build();
+        }  
+      else{
+        
+      repository.deleteById(id);
 
         return ResponseEntity
                 .noContent()
                 .build();
+    }
     }
 }

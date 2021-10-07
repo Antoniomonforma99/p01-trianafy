@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PlaylistDtoConverter {
 
-    public Playlist createPlaylistDtoToPlaylist(CreatePlaylistDto c) {
+    public static Playlist createPlaylistDtoToPlaylist(CreatePlaylistDto c) {
         return new Playlist(
                 c.getName(),
                 c.getDescription()

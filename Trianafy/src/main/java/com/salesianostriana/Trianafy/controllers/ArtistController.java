@@ -64,6 +64,7 @@ public class ArtistController {
     }
 
     @DeleteMapping("/{id}")
+
     public ResponseEntity<Artist> delete (@PathVariable("id") Long id){
         if (repository.findById(id) == null){
             return ResponseEntity.notFound().build();

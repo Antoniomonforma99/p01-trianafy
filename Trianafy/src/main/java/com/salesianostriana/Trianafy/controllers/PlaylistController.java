@@ -1,9 +1,12 @@
 package com.salesianostriana.Trianafy.controllers;
 
+
+import com.salesianostriana.Trianafy.DTOs.CreatePlaylistDto;
 import com.salesianostriana.Trianafy.DTOs.GetPlaylistDto;
 import com.salesianostriana.Trianafy.models.Playlist;
 import com.salesianostriana.Trianafy.repositories.PlaylistRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +25,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -33,6 +38,17 @@ public class PlaylistController {
     private final PlaylistRepository repository;
     private final SongRepository SongRepository;
     private final PlaylistDtoConverter dtoConverter;
+
+    @PostMapping("/")
+    public ResponseEntity<Playlist> create(@RequestBody CreatePlaylistDto dto) {
+
+        Playlist nuevo = PlaylistDtoConverter.createPlaylistDtoToPlaylist(dto);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(repository.save(nuevo));
+
+    }
 
 
     @PutMapping("/{id}")
@@ -62,28 +78,33 @@ public class PlaylistController {
 
     @PostMapping("/{id1}/songs/{id2}")
     public ResponseEntity<Playlist> addSong (@RequestBody Playlist p,
-                                             @PathVariable("id") Long id1,
-                                             @PathVariable("id") Long id2){
+                                             @PathVariable Long id1,
+                                             @PathVariable Long id2){
+        List<Song> cOld = repository.getById(id1).getSongs();
+        Optional<Playlist> pl =repository.findById(id1);
+        Optional<Song> s =SongRepository.findById(id2);
 
-        if ( (repository.findById(id1) == null)
-                || ( SongRepository.findById(id2) == null)){
+        if  (pl.isEmpty()
+                ||s.isEmpty()){
 
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
 
         }else{
-
-            Song song = SongRepository.getById(id2);
-            p.getSongs().add(song);
+            cOld.add(SongRepository.getById(id2));
+            //Song song = SongRepository.getById(id2);
+            //p.getSongs().add(song);
 
             return ResponseEntity.of(
                     repository.findById(id1).map(m -> {
-                        m.setName(p.getName());
-                        m.setDescription(p.getDescription());
-                        m.setSongs(p.getSongs());
+                        m.setName(m.getName());
+                        m.setDescription(m.getDescription());
+                        m.setSongs(cOld);
                         repository.save(m);
                         return m;
                     })
             );
         }
     }
+
+
 }

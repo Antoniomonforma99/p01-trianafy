@@ -46,6 +46,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.5.10</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -62,15 +67,15 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
+      <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>17</source>
 					<target>17</target>
 				</configuration>
-			</plugin>
-		</plugins>
+      </plugin>
+    </plugins>
 	</build>
 
 </project>

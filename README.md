@@ -33,7 +33,6 @@ respuesta.
 | Repositories | [Trianafy/Repositories]([Trianafy/controllers](https://github.com/Antoniomonforma99/p01-trianafy/tree/main/Trianafy/src/main/java/com/salesianostriana/Trianafy/repositories)) 
 
 >## Entidades
-  Crear una aplicación al estilo spotify.
   Contamos con 3 entidades que son:
   - Artist
   - Song 

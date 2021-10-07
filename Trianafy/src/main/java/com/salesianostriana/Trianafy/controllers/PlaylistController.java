@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class PlaylistController {
 
     private final PlaylistRepository repository;
-    private final SongRepository SongRepository;
+    private final SongRepository songRepository;
     private final PlaylistDtoConverter dtoConverter;
 
 
@@ -66,13 +66,13 @@ public class PlaylistController {
                                              @PathVariable("id") Long id2){
 
         if ( (repository.findById(id1) == null)
-                || ( SongRepository.findById(id2) == null)){
+                || ( songRepository.findById(id2) == null)){
 
             return ResponseEntity.badRequest().build();
 
         }else{
 
-            Song song = SongRepository.getById(id2);
+            Song song = songRepository.getById(id2);
             p.getSongs().add(song);
 
             return ResponseEntity.of(
@@ -96,6 +96,20 @@ public class PlaylistController {
         } else {
             return ResponseEntity
                     .of(repository.findById(id));
+        }
+    }
+
+    @GetMapping("/{id}/songs/{id2}")
+    public ResponseEntity<Song>findOneSongFromPlaylist(@PathVariable Long id1,
+                                                 @PathVariable Long id2) {
+        if (!repository.findById(id1).isPresent() ||
+                !repository.findById(id1).get().getSongs().contains(songRepository.findById(id2))) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        } else {
+            return ResponseEntity
+                    .of(songRepository.findById(id2));
         }
     }
 }

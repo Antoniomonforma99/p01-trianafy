@@ -5,7 +5,7 @@
 
 
 
-Este proyecto ha sido desarrollado por Alejandro,Antonio Montero y Guillermo De la cruz.
+Este proyecto ha sido desarrollado por Alejandro Martín,Antonio Montero y Guillermo De la cruz.
 Programas empleados:
 
 - API: IntelliJ idea

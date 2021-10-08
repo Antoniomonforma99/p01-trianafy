@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class PlaylistController {
 
     private final PlaylistRepository repository;
-    private final SongRepository SongRepository;
+    private final SongRepository songRepository;
     private final PlaylistDtoConverter dtoConverter;
 
     @Operation(summary = "Crea una nueva playlist")
@@ -114,7 +114,7 @@ public class PlaylistController {
                                              @PathVariable Long id1,
                                              @PathVariable Long id2){
         Optional<Playlist> playlistOptional= repository.findById(id1);
-        Optional<Song> songOptional= SongRepository.findById(id2);
+        Optional<Song> songOptional= songRepository.findById(id2);
         if (songOptional.isEmpty() ||
                 playlistOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -138,7 +138,7 @@ public class PlaylistController {
     @DeleteMapping("{id1}/songs/{id2}")
     public ResponseEntity<Playlist>deleteSong(@PathVariable Long id1, @PathVariable Long id2) {
         Optional<Playlist> playlistOptional= repository.findById(id1);
-        Optional<Song> songOptional= SongRepository.findById(id2);
+        Optional<Song> songOptional= songRepository.findById(id2);
         if (playlistOptional.isEmpty() ||
                 playlistOptional.get().getSongs().contains(songOptional)) {
             return ResponseEntity.notFound().build();
@@ -210,6 +210,30 @@ public class PlaylistController {
         }
         else {
             return ResponseEntity.of(repository.findById(id));
+        }
+    }
+
+    @Operation(summary = "Muestra una canció de una playlist existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se han mostrado la canción de una playlist correctamente",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Playlist.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se ha encontrado la canción",
+                    content = @Content),
+    })
+    @GetMapping("/{id1}/songs/{id2}")
+    public ResponseEntity<Song> getSongFromPlaylist (@PathVariable Long id1,
+                                                     @PathVariable Long id2) {
+        if (repository.findById(id1).isEmpty()
+            || !repository.findById(id1).get().getSongs().contains(songRepository.getById(id2))){
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        } else {
+            return ResponseEntity
+                    .of(songRepository.findById(id2));
         }
     }
 }

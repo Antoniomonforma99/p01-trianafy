@@ -226,8 +226,12 @@ public class PlaylistController {
     @GetMapping("/{id1}/songs/{id2}")
     public ResponseEntity<Song> getSongFromPlaylist (@PathVariable Long id1,
                                                      @PathVariable Long id2) {
-        if (repository.findById(id1).isEmpty()
-            || !repository.findById(id1).get().getSongs().contains(songRepository.getById(id2))){
+
+        Optional<Playlist> p = repository.findById(id1);
+        Optional<Song> s = songRepository.findById(id2);
+
+        if (p.isEmpty()
+            || p.get().getSongs().contains(s.get())){
             return ResponseEntity
                     .notFound()
                     .build();

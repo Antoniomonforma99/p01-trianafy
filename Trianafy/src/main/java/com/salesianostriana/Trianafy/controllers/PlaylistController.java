@@ -86,7 +86,7 @@ public class PlaylistController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Playlist.class))}),
             @ApiResponse(responseCode = "404",
-                    description = "No se ha encontrado la playlist por el ID",
+                    description = "No se han encontrado playlists",
                     content = @Content),
     })
     @GetMapping("/")

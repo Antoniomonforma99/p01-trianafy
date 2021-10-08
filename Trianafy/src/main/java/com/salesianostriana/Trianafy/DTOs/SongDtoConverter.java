@@ -27,7 +27,7 @@ public class SongDtoConverter {
 
         result.setTitle(s.getTitle());
         result.setAlbum(s.getAlbum());
-        result.setArtist(s.getArtist().getName());
+        result.setArtist(s.getArtist()==null?null:s.getArtist().getName());
         result.setYear(s.getYear());
 
         return result;

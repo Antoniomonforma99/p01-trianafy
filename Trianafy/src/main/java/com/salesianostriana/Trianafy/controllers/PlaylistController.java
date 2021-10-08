@@ -113,16 +113,16 @@ public class PlaylistController {
     public ResponseEntity<Playlist> addSong (@RequestBody Playlist p,
                                              @PathVariable Long id1,
                                              @PathVariable Long id2){
-        List<Song> lista = repository.getById(id1).getSongs();
-        if (repository.findById(id1).isEmpty() ||
-                !repository.findById(id1).get().getSongs().contains(SongRepository.getById(id2))) {
+        Optional<Playlist> playlistOptional= repository.findById(id1);
+        Optional<Song> songOptional= SongRepository.findById(id2);
+        if (songOptional.isEmpty() ||
+                playlistOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            repository
-                    .findById(id1)
-                    .get()
-                    .getSongs().add(SongRepository.getById(id2));
-            return ResponseEntity.noContent().build();
+            Song song = songOptional.get();
+            Playlist playlist = playlistOptional.get();
+            playlist.getSongs().add(song);
+            return ResponseEntity.ok(repository.save(playlist));
         }
 
 
@@ -137,16 +137,16 @@ public class PlaylistController {
     })
     @DeleteMapping("{id1}/songs/{id2}")
     public ResponseEntity<Playlist>deleteSong(@PathVariable Long id1, @PathVariable Long id2) {
-        List<Song> lista = repository.getById(id1).getSongs();
-        if (repository.findById(id1).isEmpty() ||
-                !repository.findById(id1).get().getSongs().contains(SongRepository.getById(id2))) {
+        Optional<Playlist> playlistOptional= repository.findById(id1);
+        Optional<Song> songOptional= SongRepository.findById(id2);
+        if (playlistOptional.isEmpty() ||
+                playlistOptional.get().getSongs().contains(songOptional)) {
             return ResponseEntity.notFound().build();
         } else {
-            repository
-                    .findById(id1)
-                    .get()
-                    .getSongs().remove(SongRepository.getById(id2));
-            return ResponseEntity.noContent().build();
+            Playlist playlist= playlistOptional.get();
+            Song song = songOptional.get();
+            playlist.getSongs().remove(song);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(repository.save(playlist));
         }
     }
 
